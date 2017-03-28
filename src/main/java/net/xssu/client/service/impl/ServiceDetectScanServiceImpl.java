@@ -41,14 +41,21 @@ public class ServiceDetectScanServiceImpl implements IScanService {
         commands.add(CastUtil.castString(task.getSeed()));
 
         /* adapter */
-        commands.add("--adapter-ip");
+        commands.add("--source-ip");
         commands.add(configProp.getProperty("adapter-ip"));
+        /*commands.add("--adapter-port");
+        commands.add(configProp.getProperty("adapter-port"));*/
+        /*commands.add("--adapter-mac");
+        commands.add(configProp.getProperty("adapter-mac"));*/
+        /*commands.add("--router-mac");
+        commands.add(configProp.getProperty("router-mac"));*/
 
         /* output */
         commands.add("--output-format");
-        commands.add("json");
+        commands.add("xml");
         commands.add("--output-filename");
         commands.add(task.getOutputFilename());
+        commands.add("--banners");
 
         /* service detect */
         commands.add("--service-detect");

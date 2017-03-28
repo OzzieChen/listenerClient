@@ -6,14 +6,14 @@ import java.io.*;
 
 public class ScanResult implements Serializable{
     private Integer taskId;
-    private String clientId;
+    private String shardId;
     private byte[] resultFileBytes; // JSON file
 
     public ScanResult() {}
 
-    public ScanResult(Integer taskId, String clientId, File resultFile) {
+    public ScanResult(Integer taskId, String shardId, File resultFile) {
         this.taskId = taskId;
-        this.clientId = clientId;
+        this.shardId = shardId;
 
         try {
             byte[] fileBytes = IOUtils.toByteArray(new FileInputStream(resultFile));
@@ -32,12 +32,12 @@ public class ScanResult implements Serializable{
         this.taskId = taskId;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getShardId() {
+        return shardId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setShardId(String shardId) {
+        this.shardId = shardId;
     }
 
     public byte[] getResultFileBytes() {
