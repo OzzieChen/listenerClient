@@ -1,17 +1,25 @@
 package net.xssu.client.service.impl;
 
 import com.sun.istack.internal.NotNull;
+import net.xssu.client.entity.ScanResult;
 import net.xssu.client.entity.ScanTask;
 import net.xssu.client.service.IRedisService;
 import net.xssu.client.service.IScanService;
+import net.xssu.client.task.AutoUpdateTaskStatus;
 import net.xssu.client.util.CastUtil;
 import net.xssu.client.util.PropertiesUtil;
-import net.xssu.client.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +85,26 @@ public class ServiceDetectScanServiceImpl implements IScanService {
             BufferedInputStream in = new BufferedInputStream(p.getInputStream());
             BufferedReader inBr = new BufferedReader(new InputStreamReader(in));
             String lineStr;
-            while ((lineStr = inBr.readLine()) != null) {
+            ScanResult sr = new ScanResult();
+            sr.setTaskId(task.getTaskId());
+            try{
+                while((lineStr = inBr.readLine()) != null){
+                    if(lineStr.startsWith("rate")){
+                        //rate:  0.00-kpps, 100.00% done, waiting 4-secs, found=17
+                        //rate:  0.10-kpps, 82.42% done,   0:00:01 remaining, found=14
+                        int idxOf1stComma = lineStr.indexOf(',');
+                        int idxOfPercentSign = lineStr.indexOf('%');
+                        int idxOfEqualSign = lineStr.indexOf('=');
+                        sr.setResultCount(Integer.parseInt(lineStr.substring(idxOfEqualSign+1)));
+                        sr.setProg(Double.parseDouble(lineStr.substring(idxOf1stComma+2,idxOfPercentSign)));
+                        AutoUpdateTaskStatus.updateTaskStatus(task.getTaskId(), sr);
+                    }
+                    System.out.println(lineStr);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            while ((lineStr = inBr.readLine()) != null){
                 System.out.println(lineStr);
             }
             if (p.waitFor() != 0) {

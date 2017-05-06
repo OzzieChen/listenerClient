@@ -12,28 +12,28 @@ import java.net.URLDecoder;
 import java.util.List;
 
 public class MQTaskListener {
-    @Autowired
-    IMQSendResultService sendResultService;
+	@Autowired
+	IMQSendResultService sendResultService;
 
-    public void taskHandler(ScanTask task) {
-        String rootPath = this.getClass().getClassLoader().getResource("").getPath();
-        IScanService scanService;
+	public void taskHandler(ScanTask task) {
+		String rootPath = this.getClass().getClassLoader().getResource("").getPath();
+		IScanService scanService;
 
-        if (task.getServiceDetect()) {
-            scanService = (IScanService) SpringContextsUtil.getBean("serviceDetectService");
-        } else {
-            scanService = (IScanService) SpringContextsUtil.getBean("normalScanService");
-        }
+		if (task.getServiceDetect()) {
+			scanService = (IScanService) SpringContextsUtil.getBean("serviceDetectService");
+		} else {
+			scanService = (IScanService) SpringContextsUtil.getBean("normalScanService");
+		}
 
-        String resourcesFilePath = null;
-        try {
-            resourcesFilePath = URLDecoder.decode(rootPath, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        task.setOutputFilename(resourcesFilePath + "files/output/output_sd_" + task.getTaskId() + ".txt");
-        List<String> commands = scanService.generateScanConfig(task);
-        File fp = scanService.scan(task, commands, resourcesFilePath, "masscan");
-        sendResultService.sendResult(task.getTaskId(), fp);
-    }
+		String resourcesFilePath = null;
+		try {
+			resourcesFilePath = URLDecoder.decode(rootPath, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		task.setOutputFilename(resourcesFilePath + "files/output/output_sd_" + task.getTaskId() + ".txt");
+		List<String> commands = scanService.generateScanConfig(task);
+		File fp = scanService.scan(task, commands, resourcesFilePath, "masscan");
+		sendResultService.sendResult(task.getTaskId(), fp);
+	}
 }
