@@ -1,7 +1,7 @@
 package net.xssu.client.task;
 
 import net.xssu.client.common.Constants;
-import net.xssu.client.entity.ScanResult;
+import net.xssu.client.entity.ScanStatus;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,87 +27,70 @@ import java.util.concurrent.ConcurrentHashMap;
 @Lazy(false)
 public class AutoUpdateTaskStatus {
 
-	private static final Map<Integer,ScanResult> taskStatusUpdatingMap = new ConcurrentHashMap<>();
+	private static final Map<Integer,ScanStatus> taskStatusUpdatingMap = new ConcurrentHashMap<>();
 
-	static{//test
-		ScanResult sr = new ScanResult();
-		sr.setProg(0.66);
-		sr.setResultCount(700);
-		taskStatusUpdatingMap.put(0, sr);
-		ScanResult sr2 = new ScanResult();
-		sr2.setProg(0.33);
-		sr2.setResultCount(400);
-		taskStatusUpdatingMap.put(0, sr);
-		ScanResult sr3 = new ScanResult();
-		sr3.setProg(0.88);
-		sr3.setResultCount(900);
-		taskStatusUpdatingMap.put(0, sr);
-	}
-
-	public static void updateTaskStatus(int taskId, ScanResult scanResult){
-		taskStatusUpdatingMap.put(taskId, scanResult);
+	public static void updateTaskStatus(int taskId, ScanStatus scanStatus){
+		taskStatusUpdatingMap.put(taskId, scanStatus);
 	}
 
 	/**
-	 * 每五秒执行一次
+	 * 每5秒执行一次
 	 */
 	@Scheduled(cron = "0/5 * * * * ?")
 	public void autoUpdateTaskStatus(){
-		System.out.println("定时器发送了一次数据");
-		ScanResult sr = null;
+		//System.out.println("定时器执行了一次");
+		ScanStatus sr = null;
 		for(Integer taskid : taskStatusUpdatingMap.keySet()){
 			sr = taskStatusUpdatingMap.get(taskid);
 			try{
-				sendPOST(Constants.MAIN_SERVER_URL + "/a/updt", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8") + "&task_id=" + taskid + "&prog=" + URLEncoder.encode(sr.getProg().toString(), "UTF-8") + "&result_count=" + sr.getResultCount());
+				sendPOST(Constants.MAIN_SERVER_URL + "/a/updt",
+						"node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8")
+								+ "&task_id=" + taskid
+								+ "&prog=" + URLEncoder.encode(sr.getProg()+"", "UTF-8")
+								+ "&result_count=" + sr.getResultCount()
+								+ "&rate=" + URLEncoder.encode(sr.getRate()+"", "UTF-8")
+								+ "&remaining=" + URLEncoder.encode(sr.getRemaining()+"", "UTF-8")
+						        + "&shard=" + sr.getShards());
 				taskStatusUpdatingMap.remove(taskid);
 			}catch(Exception e){
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 
 	}
 
-	private static String sendPOST(String URL, String param){
+	private static String sendPOST(String URL, String param) throws IOException{
+		System.out.println("POST "+URL+"?"+param);
 		PrintWriter out = null;
 		BufferedReader in = null;
 		String result = "";
-		try{
-			URL realUrl = new URL(URL);
-			// 打开和URL之间的连接
-			URLConnection conn = realUrl.openConnection();
-			// 设置通用的请求属性
-			conn.setRequestProperty("accept", "*/*");
-			conn.setRequestProperty("connection", "Keep-Alive");
-			conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-			// 发送POST请求必须设置如下两行
-			conn.setDoOutput(true);
-			conn.setDoInput(true);
-			// 获取URLConnection对象对应的输出流
-			out = new PrintWriter(conn.getOutputStream());
-			// 发送请求参数
-			out.print(param);
-			// flush输出流的缓冲
-			out.flush();
-			// 定义BufferedReader输入流来读取URL的响应
-			in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			while((line = in.readLine()) != null){
-				result += line;
-			}
-		}catch(Exception e){
-			System.out.println("发送 POST 请求出现异常！" + e);
-			e.printStackTrace();
-		}finally{
-			try{
-				if(out != null){
-					out.close();
-				}
-				if(in != null){
-					in.close();
-				}
-			}catch(IOException ex){
-				ex.printStackTrace();
-			}
+		URL realUrl = new URL(URL);
+		// 打开和URL之间的连接
+		URLConnection conn = realUrl.openConnection();
+		// 设置通用的请求属性
+		conn.setRequestProperty("accept", "*/*");
+		conn.setRequestProperty("connection", "Keep-Alive");
+		conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+		// 发送POST请求必须设置如下两行
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		// 获取URLConnection对象对应的输出流
+		out = new PrintWriter(conn.getOutputStream());
+		// 发送请求参数
+		out.print(param);
+		// flush输出流的缓冲
+		out.flush();
+		// 定义BufferedReader输入流来读取URL的响应
+		in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String line;
+		while((line = in.readLine()) != null){
+			result += line;
+		}
+		if(out != null){
+			out.close();
+		}
+		if(in != null){
+			in.close();
 		}
 		return result;
 	}

@@ -169,6 +169,17 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>listenerClient</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+        </resources>
+    </build>
 
     <profiles>
         <profile>
