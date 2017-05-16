@@ -9,7 +9,7 @@ import java.util.List;
 public interface IScanService {
     /**
      * Generate Scan config file.
-     * WARN: May BLOCK in here if redis haven't finished synchronize in service detection mode
+     * WARN: May BLOCK in here if redis haven't finished synchronization in service detection mode
      */
     public List<String> generateScanConfig(@NotNull ScanTask task);
 
@@ -17,7 +17,7 @@ public interface IScanService {
      * Start scan task
      *
      * @param task             scan task
-     * @param commands         scaning commands
+     * @param commands         scanning commands
      * @param processDirectory scanner process(eg. masscan) file path
      * @param processName
      * @return files.output file if scan finished, null if failed

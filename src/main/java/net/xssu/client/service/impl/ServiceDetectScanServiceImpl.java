@@ -50,24 +50,31 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		commands.add(CastUtil.castString(task.getSeed()));
 
         /* adapter */
-		commands.add("--adapter-ip");
-		commands.add(configProp.getProperty("adapter-ip")); // TODO
 
-        /* output */
-		commands.add("--output-format");
-		commands.add("json");
-		commands.add("--output-filename");
-		commands.add(task.getOutputFilename());
+		commands.add("--adapter-port");
+    commands.add(configProp.getProperty("adapter-port"));
 
-        /* service detect */
-		commands.add("--service-detect");
-		commands.add("true");
-		commands.add("--hello-first");
-		commands.add(task.getHelloFirst() ? "true" : "false");
+    /* output */
+    commands.add("--output-format");
+    commands.add(configProp.getProperty("output-format"));
+    commands.add("--output-filename");
+    commands.add(task.getOutputFilename());
 
-		commands.add("--service-patterns-file");
-		String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
-		commands.add(patternFilePath != null ? patternFilePath : " ");
+    /* service detect */
+    commands.add("--service-detect");
+    commands.add("true");
+    commands.add("--hello-first");
+    commands.add(task.getHelloFirst() ? "true" : "false");
+
+    commands.add("--service-patterns-file");
+    String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
+    commands.add(patternFilePath != null ? patternFilePath : " ");
+
+    /* others */
+    commands.add("--rate");
+    commands.add(configProp.getProperty("rate")); // TODO: Rate should configured by users
+    commands.add("--banners");
+    commands.add("true");
 
 
 
@@ -209,8 +216,8 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		Properties redisProp = PropertiesUtil.loadProps("properties/redis.properties");
 		String hKey = redisProp.getProperty("redis.patterns.key");
 		String patternStr = redisService.getPatternString(hKey, patternId);
-
-        /* Generate pattern file */
+        
+    /* Generate pattern file */
 		String rootPath = this.getClass().getClassLoader().getResource("").getPath();
 		String patternsFileDirectory = rootPath + redisProp.getProperty("redis.patterns.filepath");
 		try{
