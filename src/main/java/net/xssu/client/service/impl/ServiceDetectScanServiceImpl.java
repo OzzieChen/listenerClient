@@ -49,12 +49,12 @@ public class ServiceDetectScanServiceImpl implements IScanService {
         commands.add(CastUtil.castString(task.getSeed()));
 
         /* adapter */
-        commands.add("--adapter-ip");
-        commands.add(configProp.getProperty("adapter-ip"));
+        commands.add("--adapter-port");
+        commands.add(configProp.getProperty("adapter-port"));
 
         /* output */
         commands.add("--output-format");
-        commands.add("json");
+        commands.add(configProp.getProperty("output-format"));
         commands.add("--output-filename");
         commands.add(task.getOutputFilename());
 
@@ -68,6 +68,11 @@ public class ServiceDetectScanServiceImpl implements IScanService {
         String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
         commands.add(patternFilePath != null ? patternFilePath : " ");
 
+        /* others */
+        commands.add("--rate");
+        commands.add(configProp.getProperty("rate")); // TODO: Rate should configured by users
+        commands.add("--banners");
+        commands.add("true");
 
         return commands;
     }
