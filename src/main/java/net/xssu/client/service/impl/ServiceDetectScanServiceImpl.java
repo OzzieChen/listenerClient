@@ -111,6 +111,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 			int i = 0;
 			try{
 				while((lineStr = inBr.readLine()) != null){
+					System.out.println(lineStr);
 					if(lineStr.startsWith("rate")){
 						dataLine = lineStr;
 						if(i > 4){
@@ -147,7 +148,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	private void parse(String lineStr, ScanStatus sr, CharArrayWriter charArrayWriter){
 		//rate:  0.00-kpps, 100.00% done, waiting 4-secs, found=17
 		//rate:  0.10-kpps, 82.42% done,   0:00:01 remaining, found=14
-		System.out.println(lineStr);
+		// System.out.println(lineStr);
 		double prog, rate;
 		int resultCount;
 		String remaining;
@@ -195,7 +196,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		charArrayWriter.flush();
 		remaining = new String(charArrayWriter.toCharArray());
 		charArrayWriter.reset();
-		i = i + 13;
+		i = i + 12;
 		while(i < lineStr.length()){
 			c = lineStr.charAt(i);
 			i++;

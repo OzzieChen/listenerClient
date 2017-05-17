@@ -27,6 +27,6 @@ public class MQTaskListener {
 		task.setOutputFilename("/masscan/output/output_sd_" + task.getTaskId() + ".txt");
 		List<String> commands = scanService.generateScanConfig(task);
 		File fp = scanService.scan(task, commands, "/masscan", "masscan");
-		sendResultService.sendResult(task.getTaskId(), fp);
+		sendResultService.sendResult(task.getTaskId(), task.getShards(), fp);
 	}
 }
