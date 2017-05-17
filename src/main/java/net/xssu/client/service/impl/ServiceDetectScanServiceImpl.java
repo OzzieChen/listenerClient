@@ -26,6 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ *  Docker volume hierarchy
+ *  ----------------------------
+ *    |- / (root)
+ *    |---- masscan/
+ *    |-------------- masscan
+ *    |-------------- conf/
+ *    |-------------- output/
+ *    |-------------- pattern/
+ *  ----------------------------
+ */
 public class ServiceDetectScanServiceImpl implements IScanService {
 	@Autowired
 	private IRedisService redisService;
@@ -52,31 +63,28 @@ public class ServiceDetectScanServiceImpl implements IScanService {
         /* adapter */
 
 		commands.add("--adapter-port");
-    commands.add(configProp.getProperty("adapter-port"));
+		commands.add(configProp.getProperty("adapter-port"));
 
-    /* output */
-    commands.add("--output-format");
-    commands.add(configProp.getProperty("output-format"));
-    commands.add("--output-filename");
-    commands.add(task.getOutputFilename());
+    	/* output */
+		commands.add("--output-format");
+		commands.add(configProp.getProperty("output-format"));
+		commands.add("--output-filename");
+		commands.add(task.getOutputFilename());
 
-    /* service detect */
-    commands.add("--service-detect");
-    commands.add("true");
-    commands.add("--hello-first");
-    commands.add(task.getHelloFirst() ? "true" : "false");
+    	/* service detect */
+		commands.add("--service-detect");
+		commands.add("true");
+		commands.add("--hello-first");
+		commands.add(task.getHelloFirst() ? "true" : "false");
 
-    commands.add("--service-patterns-file");
-    String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
-    commands.add(patternFilePath != null ? patternFilePath : " ");
+		commands.add("--service-patterns-file");
+		String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
+		commands.add(patternFilePath != null ? patternFilePath : " ");
 
-    /* others */
-    commands.add("--rate");
-    commands.add(configProp.getProperty("rate")); // TODO: Rate should configured by users
-    commands.add("--banners");
-    commands.add("true");
-
-
+    	/* others */
+		commands.add("--rate");
+		commands.add(configProp.getProperty("rate")); // TODO: Rate should configured by users
+		commands.add("--banners");
 
 		return commands;
 	}
@@ -217,13 +225,11 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		String hKey = redisProp.getProperty("redis.patterns.key");
 		String patternStr = redisService.getPatternString(hKey, patternId);
         
-    /* Generate pattern file */
-		String rootPath = this.getClass().getClassLoader().getResource("").getPath();
-		String patternsFileDirectory = rootPath + redisProp.getProperty("redis.patterns.filepath");
+    	/* Generate pattern file */
+		String patternsFileDirectory = "/masscan/pattern/";
 		try{
-			String directory = URLDecoder.decode(rootPath, "UTF-8");
-			String filename = "pattern_" + patternId;
-			File patternFile = new File(directory + filename);
+            String filename = "pattern_" + patternId + ".txt";
+            File patternFile = new File(patternsFileDirectory + filename);
 			if(!patternFile.exists()){
 				if(!patternFile.createNewFile()){
 					return null;
