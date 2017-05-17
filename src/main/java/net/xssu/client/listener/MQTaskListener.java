@@ -16,7 +16,6 @@ public class MQTaskListener {
 	IMQSendResultService sendResultService;
 
 	public void taskHandler(ScanTask task) {
-		String rootPath = this.getClass().getClassLoader().getResource("").getPath();
 		IScanService scanService;
 
 		if (task.getServiceDetect()) {
@@ -25,15 +24,9 @@ public class MQTaskListener {
 			scanService = (IScanService) SpringContextsUtil.getBean("normalScanService");
 		}
 
-		String resourcesFilePath = null;
-		try {
-			resourcesFilePath = URLDecoder.decode(rootPath, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		task.setOutputFilename(resourcesFilePath + "files/output/output_sd_" + task.getTaskId() + ".txt");
+		task.setOutputFilename("/masscan/output/output_sd_" + task.getTaskId() + ".txt");
 		List<String> commands = scanService.generateScanConfig(task);
-		File fp = scanService.scan(task, commands, resourcesFilePath, "masscan");
+		File fp = scanService.scan(task, commands, "/masscan", "masscan");
 		sendResultService.sendResult(task.getTaskId(), fp);
 	}
 }
