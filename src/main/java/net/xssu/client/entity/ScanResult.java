@@ -7,13 +7,15 @@ import java.io.*;
 public class ScanResult implements Serializable{
     private Integer taskId;
     private String clientId;
+    private String shard;
     private byte[] resultFileBytes; // JSON file
 
     public ScanResult() {}
 
-    public ScanResult(Integer taskId, String clientId, File resultFile) {
+    public ScanResult(Integer taskId, String clientId, String shard, File resultFile) {
         this.taskId = taskId;
         this.clientId = clientId;
+        this.shard = shard;
 
         try {
             byte[] fileBytes = IOUtils.toByteArray(new FileInputStream(resultFile));
@@ -48,4 +50,11 @@ public class ScanResult implements Serializable{
         this.resultFileBytes = resultFileBytes;
     }
 
+    public String getShard() {
+        return shard;
+    }
+
+    public void setShard(String shard) {
+        this.shard = shard;
+    }
 }

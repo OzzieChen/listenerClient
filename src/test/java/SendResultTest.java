@@ -18,7 +18,7 @@ public class SendResultTest {
     public void sendResultTest() {
         File outputFile = new File("/Users/ozziechen/Desktop/研究生毕设/listenerClient/out/artifacts/listenerClient_war_exploded/WEB-INF/classes/files/output/output_sd_2.txt");
 
-        boolean result = sendResultService.sendResult(12, outputFile);
+        boolean result = sendResultService.sendResult(12, "1/4", outputFile);
         Assert.assertTrue(result);
     }
 }
