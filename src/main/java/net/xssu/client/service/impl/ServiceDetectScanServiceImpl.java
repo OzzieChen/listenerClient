@@ -147,7 +147,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	private void parse(String lineStr, ScanStatus sr, CharArrayWriter charArrayWriter){
 		//rate:  0.00-kpps, 100.00% done, waiting 4-secs, found=17
 		//rate:  0.10-kpps, 82.42% done,   0:00:01 remaining, found=14
-		System.out.println(lineStr);
+		// System.out.println(lineStr);
 		double prog, rate;
 		int resultCount;
 		String remaining;
