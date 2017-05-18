@@ -24,11 +24,12 @@
 	<context:annotation-config />
 	<!-- 自动扫描注解的bean -->
 	<context:component-scan base-package="net.xssu.client.task" />
+	<context:component-scan base-package="net.xssu.client.controller" />
 	<!-- <context:component-scan base-package="com.bonult.me.task" />
-	<context:component-scan base-package="com.bonult.me.service.impl" /> -->
+        <context:component-scan base-package="com.bonult.me.service.impl" /> -->
 
 	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
-	<task:scheduler id="qbScheduler" pool-size="10" />
+	<task:scheduler id="qbScheduler" pool-size="2" />
 
     <!-- Utils -->
 	<bean id="springContextsUtil" class="net.xssu.client.util.SpringContextsUtil"/>

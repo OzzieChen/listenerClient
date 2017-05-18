@@ -14,11 +14,45 @@ public class Constants {
 	public static final String MAIN_SERVER_URL;
 
 
-	static {// TODO 需要从配置文件中加载
-		Properties configProp = PropertiesUtil.loadProps("properties/config.properties");
+	static {
+		Properties configProp = getConfigProperties();
 		String clientId = configProp.getProperty("client-id");
 		NODE_ID=clientId;
 		String server = configProp.getProperty("server-url");
 		MAIN_SERVER_URL = server;
+	}
+
+	private static Properties RedisProperties;
+	private static Properties RabbitmqProperties;
+	private static Properties ConfigProperties;
+
+	public static Properties getRedisProperties(){
+		if(RedisProperties==null)
+			RedisProperties=PropertiesUtil.loadProps("properties/redis.properties");
+		return RedisProperties;
+	}
+
+	public static Properties getConfigProperties(){
+		if(ConfigProperties==null)
+			ConfigProperties=PropertiesUtil.loadProps("properties/config.properties");
+		return ConfigProperties;
+	}
+
+	public static Properties getRabbitmqProperties(){
+		if(RabbitmqProperties==null)
+			RabbitmqProperties=PropertiesUtil.loadProps("properties/rabbitmq.properties");
+		return RabbitmqProperties;
+	}
+
+	public static void setRedisPropertiesNull(){
+		RedisProperties=null;
+	}
+
+	public static void setConfigPropertiesNull(){
+		ConfigProperties=null;
+	}
+
+	public static void setRabbitmqPropertiesNull(){
+		RabbitmqProperties=null;
 	}
 }

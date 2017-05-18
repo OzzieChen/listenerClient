@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -111,7 +110,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 			int i = 0;
 			try{
 				while((lineStr = inBr.readLine()) != null){
-					System.out.println(lineStr);
+					//System.out.println(lineStr);
 					if(lineStr.startsWith("rate")){
 						dataLine = lineStr;
 						if(i > 4){
@@ -180,10 +179,14 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		i = i + 6;
 		while(i < lineStr.length()){
 			c = lineStr.charAt(i);
-			if(!(c >= '0' && c <= '9'))
+			if(!(c >= '0' && c <= '9')&&c!='-')
 				i++;
 			else
 				break;
+		}
+		if(c=='-'){
+			charArrayWriter.write(c);
+			c = lineStr.charAt(++i);
 		}
 		while(i < lineStr.length()){
 			i++;
@@ -210,8 +213,8 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		charArrayWriter.reset();
 
 		sr.setResultCount(resultCount);
-		sr.setProg(prog);
-		sr.setRemaining(remaining.length() > 2 ? remaining : remaining + "秒");
+		sr.setProg(prog>100.00001?100.0:prog);
+		sr.setRemaining(remaining.length() > 2 ? remaining : (remaining.startsWith("-")?"0":remaining) + "秒");
 		sr.setRate(rate);
 	}
 

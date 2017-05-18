@@ -53,7 +53,7 @@ public class AutoUpdateTaskStatus {
 						        + "&shard=" + sr.getShards());
 				taskStatusUpdatingMap.remove(taskid);
 			}catch(Exception e){
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 
