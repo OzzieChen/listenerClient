@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -101,6 +102,12 @@ public class PropertiesUtil {
             value = CastUtil.castBoolean(props.getProperty(key));
         }
         return value;
+    }
+
+    public static void writeProperties(Properties prop, String path) throws IOException{
+        FileOutputStream oFile = new FileOutputStream(path, false);
+        prop.store(oFile, "Update~");
+        oFile.close();
     }
 
 }

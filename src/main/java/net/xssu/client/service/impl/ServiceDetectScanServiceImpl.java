@@ -1,6 +1,7 @@
 package net.xssu.client.service.impl;
 
 import com.sun.istack.internal.NotNull;
+import net.xssu.client.common.Constants;
 import net.xssu.client.entity.ScanStatus;
 import net.xssu.client.entity.ScanTask;
 import net.xssu.client.service.IRedisService;
@@ -45,7 +46,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtil.class);
 
 	public List<String> generateScanConfig(@NotNull ScanTask task){
-		Properties configProp = PropertiesUtil.loadProps("properties/config.properties");
+		Properties configProp = Constants.getConfigProperties();
 
         /* targets */
 		commands.add("--range");
@@ -225,7 +226,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	 */
 	public String generatePatternsFile(String patternId){
 		/* Retrieve pattern string from slave redis */
-		Properties redisProp = PropertiesUtil.loadProps("properties/redis.properties");
+		Properties redisProp = Constants.getRedisProperties();
 		String hKey = redisProp.getProperty("redis.patterns.key");
 		String patternStr = redisService.getPatternString(hKey, patternId);
         
