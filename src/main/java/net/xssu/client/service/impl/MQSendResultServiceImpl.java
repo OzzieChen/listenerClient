@@ -1,8 +1,8 @@
 package net.xssu.client.service.impl;
 
+import net.xssu.client.common.Constants;
 import net.xssu.client.entity.ScanResult;
 import net.xssu.client.service.IMQSendResultService;
-import net.xssu.client.util.PropertiesUtil;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,7 +24,7 @@ public class MQSendResultServiceImpl implements IMQSendResultService{
             // TODO: Tell queue that I failed
             return false;
         }
-        Properties configProp = PropertiesUtil.loadProps("properties/config.properties");
+        Properties configProp = Constants.getConfigProperties();
         String clientId = configProp.getProperty("client-id");
         ScanResult result = new ScanResult(taskId, clientId, shard, outputFile);
         try {

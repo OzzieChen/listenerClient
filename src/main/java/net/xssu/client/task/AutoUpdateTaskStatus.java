@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,27 +41,28 @@ public class AutoUpdateTaskStatus {
 	public void autoUpdateTaskStatus(){
 		//System.out.println("定时器执行了一次");
 		ScanStatus sr = null;
-		for(Integer taskid : taskStatusUpdatingMap.keySet()){
-			sr = taskStatusUpdatingMap.get(taskid);
+		Set<Integer> set = taskStatusUpdatingMap.keySet();
+		if(set.size() == 0){
 			try{
-				sendPOST(Constants.MAIN_SERVER_URL + "/a/updt",
-						"node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8")
-								+ "&task_id=" + taskid
-								+ "&prog=" + URLEncoder.encode(sr.getProg()+"", "UTF-8")
-								+ "&result_count=" + sr.getResultCount()
-								+ "&rate=" + URLEncoder.encode(sr.getRate()+"", "UTF-8")
-								+ "&remaining=" + URLEncoder.encode(sr.getRemaining()+"", "UTF-8")
-						        + "&shard=" + sr.getShards());
-				taskStatusUpdatingMap.remove(taskid);
+				sendPOST(Constants.MAIN_SERVER_URL + "/a/updt2", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8"));
 			}catch(Exception e){
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
-		}
+		}else
+			for(Integer taskid : set){
+				sr = taskStatusUpdatingMap.get(taskid);
+				try{
+					sendPOST(Constants.MAIN_SERVER_URL + "/a/updt", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8") + "&task_id=" + taskid + "&prog=" + URLEncoder.encode(sr.getProg() + "", "UTF-8") + "&result_count=" + sr.getResultCount() + "&rate=" + URLEncoder.encode(sr.getRate() + "", "UTF-8") + "&remaining=" + URLEncoder.encode(sr.getRemaining() + "", "UTF-8") + "&shard=" + sr.getShards());
+					taskStatusUpdatingMap.remove(taskid);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 
 	}
 
 	private static String sendPOST(String URL, String param) throws IOException{
-		System.out.println("POST "+URL+"?"+param);
+		System.out.println("POST " + URL + "?" + param);
 		PrintWriter out = null;
 		BufferedReader in = null;
 		String result = "";

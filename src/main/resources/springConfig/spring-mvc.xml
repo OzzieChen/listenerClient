@@ -26,7 +26,7 @@
 	<mvc:annotation-driven /> 
 
 	<!-- 把标记了@Controller注解的类转换为bean -->
-	<!--<context:component-scan base-package="net.xssu.ipm.controller" />-->
+	<context:component-scan base-package="net.xssu.client.controller" />
 
 	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
@@ -38,7 +38,7 @@
 	<mvc:default-servlet-handler />
 
 	<!-- Config resource mapping -->
-	<mvc:resources mapping="/static/**" location="/static/" />
+	<!--<mvc:resources mapping="/static/**" location="/static/" />-->
 
 
 	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
