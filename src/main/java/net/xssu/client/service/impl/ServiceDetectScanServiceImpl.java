@@ -83,8 +83,18 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 
     	/* others */
 		commands.add("--rate");
-		commands.add(configProp.getProperty("rate")); // TODO: Rate should configured by users
+		commands.add(String.valueOf(task.getRate()));
+
+		commands.add("--output-banner");
+		commands.add(String.valueOf(task.getBanner()));
+		commands.add("--output-status");//TODO
+		commands.add(String.valueOf(task.getOthers()));
+
+		commands.add("--hex_or_string");
+		commands.add(task.getHexOrString());
+
 		commands.add("--banners");
+
 
 		return commands;
 	}
@@ -104,6 +114,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 			String lineStr;
 			ScanStatus sr = new ScanStatus();
 			sr.setTaskId(task.getTaskId());
+			sr.setShardId(task.getShardId());
 			sr.setShards(task.getShards());
 			System.out.println("开始扫描");
 			CharArrayWriter charArrayWriter = new CharArrayWriter(10);
@@ -111,7 +122,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 			int i = 0;
 			try{
 				while((lineStr = inBr.readLine()) != null){
-					//System.out.println(lineStr);
+					System.out.println(lineStr);
 					if(lineStr.startsWith("rate")){
 						dataLine = lineStr;
 						if(i > 4){
@@ -148,7 +159,6 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	private void parse(String lineStr, ScanStatus sr, CharArrayWriter charArrayWriter){
 		//rate:  0.00-kpps, 100.00% done, waiting 4-secs, found=17
 		//rate:  0.10-kpps, 82.42% done,   0:00:01 remaining, found=14
-		// System.out.println(lineStr);
 		double prog, rate;
 		int resultCount;
 		String remaining;

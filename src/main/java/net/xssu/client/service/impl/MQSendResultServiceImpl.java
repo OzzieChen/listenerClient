@@ -19,7 +19,7 @@ public class MQSendResultServiceImpl implements IMQSendResultService{
         this.queue = queue;
     }
 
-    public boolean sendResult(Integer taskId, String shard, File outputFile) {
+    public boolean sendResult(Integer taskId, String shard,Integer shardId, File outputFile) {
         if (outputFile == null) {
             // TODO: Tell queue that I failed
             return false;
@@ -27,6 +27,7 @@ public class MQSendResultServiceImpl implements IMQSendResultService{
         Properties configProp = Constants.getConfigProperties();
         String clientId = configProp.getProperty("client-id");
         ScanResult result = new ScanResult(taskId, clientId, shard, outputFile);
+        result.setShardId(shardId);
         try {
             rabbit.convertAndSend(queue.getName(), result);
             return true;

@@ -52,7 +52,7 @@ public class AutoUpdateTaskStatus {
 			for(Integer taskid : set){
 				sr = taskStatusUpdatingMap.get(taskid);
 				try{
-					sendPOST(Constants.MAIN_SERVER_URL + "/a/updt", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8") + "&task_id=" + taskid + "&prog=" + URLEncoder.encode(sr.getProg() + "", "UTF-8") + "&result_count=" + sr.getResultCount() + "&rate=" + URLEncoder.encode(sr.getRate() + "", "UTF-8") + "&remaining=" + URLEncoder.encode(sr.getRemaining() + "", "UTF-8") + "&shard=" + sr.getShards());
+					sendPOST(Constants.MAIN_SERVER_URL + "/a/updt", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8") + "&task_id=" + taskid + "&prog=" + URLEncoder.encode(sr.getProg() + "", "UTF-8") + "&result_count=" + sr.getResultCount() + "&rate=" + URLEncoder.encode(sr.getRate() + "", "UTF-8") + "&remaining=" + URLEncoder.encode(sr.getRemaining() + "", "UTF-8") + "&shard=" + sr.getShards() +"&shardId=" + sr.getShardId());
 					taskStatusUpdatingMap.remove(taskid);
 				}catch(Exception e){
 					e.printStackTrace();
@@ -62,7 +62,7 @@ public class AutoUpdateTaskStatus {
 	}
 
 	private static String sendPOST(String URL, String param) throws IOException{
-		System.out.println("POST " + URL + "?" + param);
+		if(param.length()>30)System.out.println("POST " + URL + "?" + param);
 		PrintWriter out = null;
 		BufferedReader in = null;
 		String result = "";

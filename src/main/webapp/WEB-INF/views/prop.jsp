@@ -15,6 +15,11 @@
     <form method="post" action="${ctx}${myurl}" style="width:100%;">
         <table>
             <tbody>
+            <tr><td style="text-align: right">设置项&nbsp;&nbsp;&nbsp;</td><td><select onchange="window.location='${ctx}/editProp/'+this.value;">
+                <option value="config" <c:if test="${requestScope.op eq 'config'}">selected="selected"</c:if>>config</option>
+                <option value="redis" <c:if test="${requestScope.op eq 'redis'}">selected="selected"</c:if>>redis</option>
+                <option value="rabbitmq" <c:if test="${requestScope.op eq 'rabbitmq'}">selected="selected"</c:if>>rabbitmq</option>
+            </select> </td></tr>
             <c:forEach items="${requestScope.list}" var="a">
                <tr> <td style="text-align: right">${pageScope.a[0]}&nbsp;&nbsp;&nbsp;</td>
                 <td ><input style="font-size: 14px;width: 250px;" type="text" name="${pageScope.a[0]}" value="${pageScope.a[1]}" class="input-text radius size-M"></td>

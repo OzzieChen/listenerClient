@@ -13,6 +13,11 @@ public class ScanTask implements Serializable {
     private Boolean isServiceDetect;
     private Boolean isHelloFirst;
     private long patternId;
+    private Integer shardId;
+    private Integer rate;
+    private Boolean banner;
+    private Boolean others;
+    private String hexOrString;
 
     private String outputFilename;
 
@@ -100,5 +105,35 @@ public class ScanTask implements Serializable {
 
     public void setSeed(long seed) {
         this.seed = seed;
+    }
+    public Integer getShardId(){
+        return shardId;
+    }
+    public void setShardId(Integer shardId){
+        this.shardId = shardId;
+    }
+    public Integer getRate(){
+        return rate;
+    }
+    public void setRate(Integer rate){
+        this.rate = rate;
+    }
+    public Boolean getBanner(){
+        return banner;
+    }
+    public void setBanner(Boolean banner){
+        this.banner = banner;
+    }
+    public Boolean getOthers(){
+        return others;
+    }
+    public void setOthers(Boolean others){
+        this.others = others;
+    }
+    public String getHexOrString(){
+        return hexOrString;
+    }
+    public void setHexOrString(String hexOrString){
+        this.hexOrString = hexOrString;
     }
 }
