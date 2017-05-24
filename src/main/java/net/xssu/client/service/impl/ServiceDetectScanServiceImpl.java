@@ -27,15 +27,15 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- *  Docker volume hierarchy
- *  ----------------------------
- *    |- / (root)
- *    |---- masscan/
- *    |-------------- masscan
- *    |-------------- conf/
- *    |-------------- output/
- *    |-------------- pattern/
- *  ----------------------------
+ * Docker volume hierarchy
+ * ----------------------------
+ * |- / (root)
+ * |---- masscan/
+ * |-------------- masscan
+ * |-------------- conf/
+ * |-------------- output/
+ * |-------------- pattern/
+ * ----------------------------
  */
 public class ServiceDetectScanServiceImpl implements IScanService {
 	@Autowired
@@ -61,13 +61,16 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		commands.add(CastUtil.castString(task.getSeed()));
 
         /* adapter */
+//
+//		commands.add("--adapter-ip");
+//		commands.add("192.168.0.200");
 
-		commands.add("--adapter-port");
-		commands.add(configProp.getProperty("adapter-port"));
+		 commands.add("--adapter-port");
+		 commands.add(configProp.getProperty("adapter-port"));
 
     	/* output */
 		commands.add("--output-format");
-		commands.add(configProp.getProperty("output-format"));
+		commands.add("list");
 		commands.add("--output-filename");
 		commands.add(task.getOutputFilename());
 
@@ -87,8 +90,12 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 
 		commands.add("--output-banner");
 		commands.add(String.valueOf(task.getBanner()));
-		commands.add("--output-status");//TODO
+		commands.add("--output-others");//TODO
 		commands.add(String.valueOf(task.getOthers()));
+		if(task.getOthers()){
+			commands.add("--show");//TODO
+			commands.add("all");
+		}
 
 		commands.add("--hex_or_string");
 		commands.add(task.getHexOrString());
@@ -122,8 +129,8 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 			int i = 0;
 			try{
 				while((lineStr = inBr.readLine()) != null){
-					System.out.println(lineStr);
 					if(lineStr.startsWith("rate")){
+						System.out.println(lineStr);
 						dataLine = lineStr;
 						if(i > 4){
 							parse(lineStr, sr, charArrayWriter);
@@ -190,12 +197,12 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		i = i + 6;
 		while(i < lineStr.length()){
 			c = lineStr.charAt(i);
-			if(!(c >= '0' && c <= '9')&&c!='-')
+			if(!(c >= '0' && c <= '9') && c != '-')
 				i++;
 			else
 				break;
 		}
-		if(c=='-'){
+		if(c == '-'){
 			charArrayWriter.write(c);
 			c = lineStr.charAt(++i);
 		}
@@ -220,12 +227,12 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 				break;
 		}
 		charArrayWriter.flush();
-		resultCount = Integer.parseInt(new String(charArrayWriter.toCharArray()));
+		resultCount = Integer.parseInt(charArrayWriter.toString());
 		charArrayWriter.reset();
 
 		sr.setResultCount(resultCount);
-		sr.setProg(prog>100.00001?100.0:prog);
-		sr.setRemaining(remaining.length() > 2 ? remaining : (remaining.startsWith("-")?"0":remaining) + "秒");
+		sr.setProg(prog > 100.00001 ? 100.0 : prog);
+		sr.setRemaining(remaining.length() > 2 ? remaining : (remaining.startsWith("-") ? "0" : remaining) + "秒");
 		sr.setRate(rate);
 	}
 
@@ -239,12 +246,12 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		Properties redisProp = Constants.getRedisProperties();
 		String hKey = redisProp.getProperty("redis.patterns.key");
 		String patternStr = redisService.getPatternString(hKey, patternId);
-        
+
     	/* Generate pattern file */
 		String patternsFileDirectory = "/masscan/pattern/";
 		try{
-            String filename = "pattern_" + patternId + ".txt";
-            File patternFile = new File(patternsFileDirectory + filename);
+			String filename = "pattern_" + patternId + ".txt";
+			File patternFile = new File(patternsFileDirectory + filename);
 			if(!patternFile.exists()){
 				if(!patternFile.createNewFile()){
 					return null;

@@ -23,7 +23,7 @@ public class MQTaskListener {
 				scanService = (IScanService)SpringContextsUtil.getBean("normalScanService");
 			}
 
-			task.setOutputFilename("/masscan/output/output_sd_" + task.getTaskId() + ".txt");
+			task.setOutputFilename("/masscan/output/output_sd_" + task.getTaskId()+"_"+task.getShardId() + ".txt");
 			List<String> commands = scanService.generateScanConfig(task);
 			File fp = scanService.scan(task, commands, "/masscan", "masscan");
 			sendResultService.sendResult(task.getTaskId(), task.getShards(), task.getShardId(), fp);
