@@ -45,7 +45,7 @@ public class AutoUpdateTaskStatus {
 		Set<String> set = taskStatusUpdatingMap.keySet();
 		if(set.size() == 0){
 			try{
-				sendPOST(Constants.MAIN_SERVER_URL + "/a/updt2", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8"));
+				sendPOST(Constants.getMainServerUrl() + "/a/updt2", "node_id=" + URLEncoder.encode(Constants.getClientId(), "UTF-8"));
 			}catch(Exception e){
 				//e.printStackTrace();
 			}
@@ -54,7 +54,7 @@ public class AutoUpdateTaskStatus {
 				try{
 					sr = taskStatusUpdatingMap.remove(taskidshardid);
 					if(sr != null){
-						sendPOST(Constants.MAIN_SERVER_URL + "/a/updt", "node_id=" + URLEncoder.encode(Constants.NODE_ID, "UTF-8") + "&task_id=" + sr.getTaskId() + "&prog=" + URLEncoder.encode(sr.getProg() + "", "UTF-8") + "&result_count=" + sr.getResultCount() + "&rate=" + URLEncoder.encode(sr.getRate() + "", "UTF-8") + "&remaining=" + URLEncoder.encode(sr.getRemaining() + "", "UTF-8") + "&shard=" + sr.getShards() + "&shardId=" + sr.getShardId());
+						sendPOST(Constants.getMainServerUrl() + "/a/updt", "node_id=" + URLEncoder.encode(Constants.getClientId(), "UTF-8") + "&task_id=" + sr.getTaskId() + "&prog=" + URLEncoder.encode(sr.getProg() + "", "UTF-8") + "&result_count=" + sr.getResultCount() + "&rate=" + URLEncoder.encode(sr.getRate() + "", "UTF-8") + "&remaining=" + URLEncoder.encode(sr.getRemaining() + "", "UTF-8") + "&shard=" + sr.getShards() + "&shardId=" + sr.getShardId());
 						//taskStatusUpdatingMap.remove(taskidshardid);
 					}
 				}catch(Exception e){
@@ -106,19 +106,19 @@ public class AutoUpdateTaskStatus {
 	 */
 	@Scheduled(cron = "0 0 2 ? * *")
 	public void dingshiDeleteOldFiles(){
-		File d = new File("/masscan/output");
-		if(d.exists() && d.isDirectory()){
-			File[] fs = d.listFiles();
-			long curr = System.currentTimeMillis();
-			for(File f : fs){
-				try{
-					if(curr - f.lastModified() > 1000 * 3600 * 24 * 2)
-						f.delete();
-				}catch(Exception e){
-					e.printStackTrace();
+		File[] files = new File[]{new File("/masscan/output"), new File("masscan/pattern")};
+		for(File d : files)
+			if(d.exists() && d.isDirectory()){
+				File[] fs = d.listFiles();
+				long curr = System.currentTimeMillis();
+				for(File f : fs){
+					try{
+						if(curr - f.lastModified() > 1000 * 3600 * 24 * 2)
+							f.delete();
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			}
-		}
-
 	}
 }

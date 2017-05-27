@@ -61,7 +61,7 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		commands.add(CastUtil.castString(task.getSeed()));
 
         /* adapter */
-//
+
 //		commands.add("--adapter-ip");
 //		commands.add("192.168.0.200");
 
@@ -81,7 +81,8 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 		commands.add(task.getHelloFirst() ? "true" : "false");
 
 		commands.add("--service-patterns-file");
-		String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
+//		String patternFilePath = generatePatternsFile(String.valueOf(task.getPatternId()));
+		String patternFilePath = generatePatternsFile(task.getPattern(),task.getTaskId());
 		commands.add(patternFilePath != null ? patternFilePath : " ");
 
     	/* others */
@@ -241,16 +242,17 @@ public class ServiceDetectScanServiceImpl implements IScanService {
 	 *
 	 * @return pattern's file path, null if generation failed
 	 */
-	public String generatePatternsFile(String patternId){
+	public String generatePatternsFile(/*String patternId*/String patternStr,Integer taskId){
 		/* Retrieve pattern string from slave redis */
-		Properties redisProp = Constants.getRedisProperties();
-		String hKey = redisProp.getProperty("redis.patterns.key");
-		String patternStr = redisService.getPatternString(hKey, patternId);
+		//Properties redisProp = Constants.getRedisProperties();
+		//String hKey = redisProp.getProperty("redis.patterns.key");
+		//String patternStr = redisService.getPatternString(hKey, patternId);
 
     	/* Generate pattern file */
 		String patternsFileDirectory = "/masscan/pattern/";
 		try{
-			String filename = "pattern_" + patternId + ".txt";
+			//String filename = "pattern_" + patternId + ".txt";
+			String filename = "pattern_" + taskId + ".txt";
 			File patternFile = new File(patternsFileDirectory + filename);
 			if(!patternFile.exists()){
 				if(!patternFile.createNewFile()){
