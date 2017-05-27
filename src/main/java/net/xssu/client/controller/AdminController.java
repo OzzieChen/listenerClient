@@ -25,6 +25,7 @@ public class AdminController {
 			list.add(new String[]{"port", Constants.getRedisProperties().getProperty("redis.port")});
 			model.addAttribute("myurl", "/editProp/redis");
 			model.addAttribute("list", list);
+			model.addAttribute("op",op);
 			return "prop";
 		}else if("rabbitmq".equals(op)){
 			List<String[]> list = new ArrayList<>(4);
@@ -34,6 +35,7 @@ public class AdminController {
 			list.add(new String[]{"password", Constants.getRabbitmqProperties().getProperty("rabbitmq.password")});
 			model.addAttribute("myurl", "/editProp/rabbitmq");
 			model.addAttribute("list", list);
+			model.addAttribute("op",op);
 			return "prop";
 		}else if("config".equals(op)){
 			List<String[]> list = new ArrayList<>(5);
@@ -45,6 +47,7 @@ public class AdminController {
 
 			model.addAttribute("myurl", "/editProp/config");
 			model.addAttribute("list", list);
+			model.addAttribute("op",op);
 			return "prop";
 		}
 		return null;
@@ -65,6 +68,7 @@ public class AdminController {
 			}else{
 				p.setProperty("redis.hostname", request.getParameter("hostname"));
 				p.setProperty("redis.port", request.getParameter("port"));
+				p.setProperty("redis.patterns.key", "patterns");
 				try{
 					PropertiesUtil.writeProperties(p, path+"properties/redis.properties");
 				}catch(IOException e){
@@ -139,6 +143,7 @@ public class AdminController {
 			model.addAttribute("myurl", "/editProp/config");
 			model.addAttribute("list", list);
 		}
+		model.addAttribute("op",op);
 		model.addAttribute("msg", msg);
 		return "prop";
 	}

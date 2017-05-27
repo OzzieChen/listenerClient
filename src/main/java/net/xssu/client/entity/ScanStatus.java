@@ -7,6 +7,7 @@ public class ScanStatus {
 	private double rate;//扫描速度 kpps
 	private String remaining;
 	private String shards;
+	private Integer shardId;
 
 	public ScanStatus(){
 	}
@@ -46,5 +47,11 @@ public class ScanStatus {
 	}
 	public void setShards(String shards){
 		this.shards = shards;
+	}
+	public Integer getShardId(){
+		return shardId;
+	}
+	public void setShardId(Integer shardId){
+		this.shardId = shardId;
 	}
 }

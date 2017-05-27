@@ -15,7 +15,7 @@ public class RedisTest {
 
     @Test
     public void patternFileGenerateTest() {
-        String result = serviceDetectScanService.generatePatternsFile("4");
+        String result = serviceDetectScanService.generatePatternsFile("4",0);
         System.out.println(result);
         assertNotNull(result);
     }

@@ -8,6 +8,7 @@ public class ScanResult implements Serializable{
     private Integer taskId;
     private String clientId;
     private String shard;
+    private Integer shardId;
     private byte[] resultFileBytes; // JSON file
 
     public ScanResult() {}
@@ -56,5 +57,11 @@ public class ScanResult implements Serializable{
 
     public void setShard(String shard) {
         this.shard = shard;
+    }
+    public Integer getShardId(){
+        return shardId;
+    }
+    public void setShardId(Integer shardId){
+        this.shardId = shardId;
     }
 }
